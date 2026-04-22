@@ -1,0 +1,12 @@
+*,*::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root{
+  --BaseColor:  #1b1819;
+  --SecondBaseColor: #2d2327;
+  --TextColor: #A0355E;
+  --SecondTextColor: #F5005D;
+}
+
+body{
+  background-color: var(--SecondBaseColor);
+}
