@@ -1,15 +1,27 @@
-import { useState } from "react";
+import { Link } from "react-router-dom";
 import { api } from "../../app/api/api.ts";
-import styles from "./AuthPage.module.css";
+import styles from "./NavBar.module.css";
 
-export const AuthPage = () => {
-    return(
-        <div className={styles.LogInrotationcontainer}>
-            <div className={styles.LogIncontainer}>
-                <input type="text" className={styles.LogInName} placeholder="Name"/><br/>
-                <input type="password" className={styles.Password} placeholder="Pass"/><br/>
-                <button className={styles.LogInbutton}>LogIn</button>
-            </div>
-        </div>
-    )
+export const NavBar = () => {
+  const isLoggedIn = api.auth.isLoggedIn();
+
+  function handleLogout() {
+    api.auth.logout();
+    window.location.href = "/";
+  }
+
+
+  return (
+    <div className={styles.Nav}>
+      <Link to={"/"} className={styles.NavBTN}>Home</Link>
+
+      {isLoggedIn ? (
+        <button className={styles.NavBTN} onClick={handleLogout}>
+          Logout
+        </button>
+      ) : (
+        <Link to={"/Auth"} className={styles.NavBTN}>SignIn / SignUp</Link>
+      )}
+    </div>
+  );
 };
