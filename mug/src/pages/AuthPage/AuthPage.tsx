@@ -1,13 +1,60 @@
-import styles from "./AuthPage.module.css"
+import { useState } from "react";
+import { api } from "../../app/api/api.ts";
+import styles from "./AuthPage.module.css";
 
 export const AuthPage = () => {
-    return(
-        <div className={styles.LogInrotationcontainer}>
-            <div className={styles.LogIncontainer}>
-                <input type="text" className={styles.LogInName} placeholder="Name"/><br/>
-                <input type="password" className={styles.Password} placeholder="Pass"/><br/>
-                <button className={styles.LogInbutton}>LogIn</button>
-            </div>
-        </div>
-    )
+  const [login, setLogin] = useState("");
+  const [password, setPassword] = useState("");
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function handleLogin() {
+    setLoading(true);
+    setError(null);
+
+    try {
+      await api.auth.login({ login, password });
+
+      window.location.href = "/"; 
+    } catch (err: any) {
+      setError(err.message || "Login failed");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div className={styles.LogInrotationcontainer}>
+      <div className={styles.LogIncontainer}>
+        <input
+          type="text"
+          className={styles.LogInName}
+          placeholder="Login"
+          value={login}
+          onChange={(e) => setLogin(e.target.value)}
+        />
+        <br />
+
+        <input
+          type="password"
+          className={styles.Password}
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <br />
+
+        <button
+          className={styles.LogInbutton}
+          onClick={handleLogin}
+          disabled={loading}
+        >
+          {loading ? "Loading..." : "LogIn"}
+        </button>
+
+        {error && <div style={{ color: "red" }}>{error}</div>}
+      </div>
+    </div>
+  );
 };
