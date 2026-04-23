@@ -16,6 +16,8 @@ export const NavBar = () => {
     <div className={styles.Nav}>
       <Link to={"/"} className={styles.NavBTN}>Home</Link>
 
+      <div className={styles.Logo}>MUG</div>
+
       {isLoggedIn ? (
         <button className={styles.NavBTN} onClick={handleLogout}>
           Logout

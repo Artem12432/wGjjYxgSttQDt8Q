@@ -15,7 +15,6 @@
     width: 100%;
     height: 100%;
     opacity: 0.5;
-
 }
 
 .LogIncontainer{
@@ -25,7 +24,7 @@
     align-content: center;
 }
 
-.LogInNamepaaword{
+.LogInNameandPassword{
     padding: 10px;
     font-size: 20px;
     border-radius: 10px;
