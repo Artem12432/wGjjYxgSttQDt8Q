@@ -18,7 +18,7 @@ export class UserController {
     const user = await service.getUserById(id);
 
     if (!user) {
-      return reply.status(404).send({ error: "User not found" });
+      return reply.status(404).send({ error: "Invalid credentials" });
     }
 
     return user;
@@ -31,7 +31,7 @@ export class UserController {
     const user = await service.getUserByName(req.params.name);
 
     if (!user) {
-     return reply.status(404).send({ error: "User not found"});
+     return reply.status(404).send({ error: "Invalid credentials"});
     }
 
     return user;

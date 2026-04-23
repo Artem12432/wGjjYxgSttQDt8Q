@@ -1,56 +1,69 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { prisma } from "../../db/prisma.js";
+import { env } from "../../config/env.js";
 
-const JWT_SECRET = "super-secret-key";
 
 export class AuthService {
-  async register(data: {
-    login: string;
-    email: string;
-    password: string;
-    name: string;
-  }) {
-    const hashedPassword = await bcrypt.hash(data.password, 10);
+async login(data: { login: string; password: string }) {
+  const user = await prisma.user.findUnique({ where: { login: data.login } });
+  if (!user) throw new Error("User not found");
 
-    const user = await prisma.user.create({
-      data: {
-        login: data.login,
-        email: data.email,
-        name: data.name,
-        password: hashedPassword,
-      },
-    });
+  const isValid = await bcrypt.compare(data.password, user.password);
+  if (!isValid) throw new Error("Invalid password");
 
-    return {
-      id: user.id,
-      login: user.login,
-      email: user.email,
-      name: user.name,
-    };
-  }
+  const accessToken = jwt.sign(
+    { id: user.id, login: user.login },
+    env.JWT_SECRET,
+    { expiresIn: "15m" }
+  );
+  const refreshToken = jwt.sign(
+    { id: user.id },
+    env.JWT_REFRESH_SECRET,
+    { expiresIn: "7d" }
+  );
 
-  async login(data: { login: string; password: string }) {
-    const user = await prisma.user.findUnique({
-      where: { login: data.login },
-    });
+  await prisma.refreshToken.create({
+    data: { token: refreshToken, userId: user.id },
+  });
 
-    if (!user) {
-      throw new Error("User not found");
-    }
+  return { accessToken, refreshToken };
+}
 
-    const isValid = await bcrypt.compare(data.password, user.password);
+async refresh(token: string) {
+  const payload = jwt.verify(token, env.JWT_REFRESH_SECRET) as { id: number };
 
-    if (!isValid) {
-      throw new Error("Invalid password");
-    }
+  const stored = await prisma.refreshToken.findFirst({
+    where: { token, userId: payload.id },
+  });
+  if (!stored) throw new Error("Invalid refresh token");
 
-    const token = jwt.sign(
-      { id: user.id, login: user.login },
-      JWT_SECRET,
-      { expiresIn: "1d" }
-    );
+  const user = await prisma.user.findUnique({ where: { id: payload.id } });
+  if (!user) throw new Error("User not found");
 
-    return { token };
-  }
+  const accessToken = jwt.sign(
+    { id: user.id, login: user.login },
+    env.JWT_SECRET,
+    { expiresIn: "15m" }
+  );
+
+  return { accessToken };
+}
+
+async logout(token: string) {
+  await prisma.refreshToken.deleteMany({ where: { token } });
+}
+
+async register(data: { login: string; email: string; password: string; name: string }) {
+  const existing = await prisma.user.findFirst({
+    where: { OR: [{ login: data.login }, { email: data.email }] },
+  });
+  if (existing) throw new Error("Login or email already taken");
+
+  const hashedPassword = await bcrypt.hash(data.password, 10);
+  const user = await prisma.user.create({
+    data: { login: data.login, email: data.email, name: data.name, password: hashedPassword },
+  });
+  return { id: user.id, login: user.login, email: user.email, name: user.name };
+}
 }
