@@ -28,4 +28,20 @@ export class AuthController {
     const result = await service.login(req.body);
     return reply.send(result);
   }
+
+  async refresh(
+    req: FastifyRequest<{ Body: { refreshToken: string } }>,
+    reply: FastifyReply
+    ) {
+      const result = await service.refresh(req.body.refreshToken);
+      return reply.send(result);
+   }
+
+  async logout(
+    req: FastifyRequest<{ Body: { refreshToken: string } }>,
+    reply: FastifyReply
+    ) {
+      await service.logout(req.body.refreshToken);
+     return reply.send({ message: "Logged out" });
+  }
 }
