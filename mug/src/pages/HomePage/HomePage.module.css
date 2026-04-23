@@ -1,3 +1,44 @@
-.Page{
+.Page {
+  column-count: 6;
+  column-gap: 10px;
+  padding: 10px;
+}
 
+/* убираем background-image */
+.Photo {
+  width: 100%;
+  margin-bottom: 10px;
+  border-radius: 20px;
+  cursor: pointer;
+  break-inside: avoid;
+}
+
+/* модалка */
+.Modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ModalContent img {
+  max-width: 90vw;
+  max-height: 80vh;
+  border-radius: 12px;
+}
+
+.DownloadBtn {
+  display: block;
+  margin-top: 10px;
+  background: white;
+  padding: 10px;
+  text-align: center;
+  border-radius: 10px;
+  text-decoration: none;
+  color: black;
 }

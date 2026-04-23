@@ -2,10 +2,20 @@
     position: absolute;
     display: flex ;
     width: 100%;
-    height: 100%;
-    top: 0;
+    height: calc(100% - 51px);
     justify-content: center;
-    align-items: center;
+    align-items: center;    
+}
+
+.BGImages{
+    background-image:  url("NicePng_squiggle-png_734668.png");
+    background-repeat: repeat;
+    background-size: 400px 400px;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0.5;
+
 }
 
 .LogIncontainer{
@@ -13,4 +23,23 @@
     position: absolute;
     display: flex ;
     align-content: center;
+}
+
+.LogInNamepaaword{
+    padding: 10px;
+    font-size: 20px;
+    border-radius: 10px;
+    background-color: var(--BaseColor);
+    color: aliceblue;
+    border-color: var(--BaseColor);
+}
+
+.LogInbutton{
+    background-color: var(--SecondTextColor);
+    font-size: 20px;
+    width: 100%;
+    padding: 10px;
+    color: aliceblue;
+    text-decoration: none;
+    border-radius: 10px;
 }
