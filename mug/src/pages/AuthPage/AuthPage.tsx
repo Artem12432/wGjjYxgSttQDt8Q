@@ -1,27 +1,60 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
 import { api } from "../../app/api/api.ts";
-import styles from "./NavBar.module.css";
+import styles from "./AuthPage.module.css";
 
-export const NavBar = () => {
-  const isLoggedIn = api.auth.isLoggedIn();
+export const AuthPage = () => {
+  const [login, setLogin] = useState("");
+  const [password, setPassword] = useState("");
 
-  function handleLogout() {
-    api.auth.logout();
-    window.location.href = "/";
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function handleLogin() {
+    setLoading(true);
+    setError(null);
+
+    try {
+      await api.auth.login({ login, password });
+
+      window.location.href = "/"; 
+    } catch (err: any) {
+      setError(err.message || "Login failed");
+    } finally {
+      setLoading(false);
+    }
   }
 
-
   return (
-    <div className={styles.Nav}>
-      <Link to={"/"} className={styles.NavBTN}>Home</Link>
+    <div className={styles.LogInrotationcontainer}>
+      <div className={styles.LogIncontainer}>
+        <input
+          type="text"
+          className={styles.LogInName}
+          placeholder="Login"
+          value={login}
+          onChange={(e) => setLogin(e.target.value)}
+        />
+        <br />
 
-      {isLoggedIn ? (
-        <button className={styles.NavBTN} onClick={handleLogout}>
-          Logout
+        <input
+          type="password"
+          className={styles.Password}
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <br />
+
+        <button
+          className={styles.LogInbutton}
+          onClick={handleLogin}
+          disabled={loading}
+        >
+          {loading ? "Loading..." : "LogIn"}
         </button>
-      ) : (
-        <Link to={"/Auth"} className={styles.NavBTN}>SignIn / SignUp</Link>
-      )}
+
+        {error && <div style={{ color: "red" }}>{error}</div>}
+      </div>
     </div>
   );
 };
