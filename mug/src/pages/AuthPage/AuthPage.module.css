@@ -30,7 +30,7 @@
     border-radius: 10px;
     background-color: var(--BaseColor);
     color: aliceblue;
-    border-color: var(--BaseColor);
+    border: none;
 }
 
 .LogInbutton{
@@ -41,4 +41,5 @@
     color: aliceblue;
     text-decoration: none;
     border-radius: 10px;
+    border: none;
 }
