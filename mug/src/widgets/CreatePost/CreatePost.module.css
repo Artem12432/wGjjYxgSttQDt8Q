@@ -1,0 +1,91 @@
+
+.Layout {
+    display: flex;  
+    flex-direction: column;
+    padding: 20px;
+    padding-top: 0px;
+    background-color: var( --BaseColor);
+    color: aliceblue;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    
+}
+
+.CreatePost {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.CreatePostContent{
+    display: flex;
+    flex-direction: row;
+    gap:50px;
+    padding: 20px;
+    justify-content: center;
+}
+
+.PlusForCreate {
+    position:absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;    
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    background-color: var(--BaseColor);
+    color: aliceblue;
+    right: 10px;
+    bottom: 10px;
+}
+
+.textup {
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    background-color: var(--TextColor);
+    padding: 10px;
+}
+
+.UploadIMG {
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+    height: 800px;
+    border-radius: 20px;
+    border: 1px solid var(--SecondBaseColor);
+    left: 50px;
+}
+
+.TextUpload{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: calc(100% - 500px);
+    
+}
+
+.PostTitle {
+    height: 60px;
+    width: 100%;
+    background-color: var(--BaseColor);
+    border-radius: 20px;
+    border: none;
+    border-bottom: 1px solid var(--SecondBaseColor);
+    color: aliceblue;
+    padding-left: 20px;
+    margin-bottom: 40px;
+}  
+
+.Comment {
+    height: 60px;
+    width: 100%;
+    background-color: var(--BaseColor);
+    border-radius: 20px;
+    border: none;
+    border-bottom: 1px solid var(--SecondBaseColor);
+    color: aliceblue;
+    padding-left: 20px;
+}

@@ -1,8 +1,9 @@
 import styles from "./ProfilePage.module.css";
-import { PinsFolder } from "./PinsFolder/PinsFolder";
 import { api } from "../../app/api/api";
 import type { User } from "../../app/api/api";
 import { useEffect, useState } from "react";
+import { CreatePost } from "../../widgets/CreatePost/CreatePost";
+
 
 export const ProfilePage = () => {
     const [User, setUser] = useState<User | null>(null);
@@ -25,7 +26,6 @@ export const ProfilePage = () => {
                         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vel sapien eget nunc efficitur commodo.</p>
                     </div>
                     <div>
-                        <h2>Posts</h2>
                         {User?.posts?.length ? (
                             <ul>
                             {User.posts.map((post) => (
@@ -41,7 +41,7 @@ export const ProfilePage = () => {
                 </div>
             </div>
             <div className={styles.ProfilePins }>
-                <PinsFolder />
+                <CreatePost/>
             </div>
         </div>
     );
