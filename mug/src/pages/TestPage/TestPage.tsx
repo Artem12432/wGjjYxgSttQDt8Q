@@ -20,6 +20,10 @@ export const TestPage = () => {
         <div key={post.id}>
           <h2>{post.title}</h2>
           <p>{post.content}</p>
+          <p>author: {post.user?.name}</p>
+          {post.tags?.map((t) => (
+            <p>{t.tag.name}</p>
+          ))}
           {post.imageUrl && (
             <img src={post.imageUrl} alt={post.title} />
           )}

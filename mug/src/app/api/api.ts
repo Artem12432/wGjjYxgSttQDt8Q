@@ -5,6 +5,7 @@ export interface User {
   login: string;
   email: string;
   name: string;
+  posts?: Post[];
 }
 
 export interface Tag {
