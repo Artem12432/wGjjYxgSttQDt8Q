@@ -59,6 +59,7 @@ async function seedTestData() {
           title: "Hello World",
           content: "My first post",
           userId: user.id,
+          imageUrl: "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png",
         },
       }),
       prisma.post.create({
@@ -66,6 +67,8 @@ async function seedTestData() {
           title: "Fastify API",
           content: "Backend is working",
           userId: user.id,
+          imageUrl: "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png",
+          
         },
       }),
       prisma.post.create({
@@ -73,6 +76,7 @@ async function seedTestData() {
           title: "Prisma Relations",
           content: "Many-to-many example",
           userId: user.id,
+          imageUrl: "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png",
         },
       }),
     ]);

@@ -7,6 +7,25 @@ export interface User {
   name: string;
 }
 
+export interface Tag {
+  id: number;
+  name: string;
+}
+
+export interface PostTag {
+  tag: Tag;
+}
+
+export interface Post {
+  id: number;
+  title?: string;
+  content?: string;
+  imageUrl?: string;
+  userId: number;
+  user?: User;
+  tags?: PostTag[];
+}
+
 export interface AuthTokens {
   accessToken: string;
   refreshToken: string;
@@ -25,35 +44,38 @@ export interface LoginBody {
 }
 
 const TokenStorage = {
-  getAccess: (): string | null => localStorage.getItem("accessToken"),
-  getRefresh: (): string | null => localStorage.getItem("refreshToken"),
+  getAccess: () => localStorage.getItem("accessToken"),
+  getRefresh: () => localStorage.getItem("refreshToken"),
 
-  save: (tokens: AuthTokens): void => {
+  save: (tokens: AuthTokens) => {
     localStorage.setItem("accessToken", tokens.accessToken);
     localStorage.setItem("refreshToken", tokens.refreshToken);
   },
 
-  saveAccess: (token: string): void => {
+  saveAccess: (token: string) => {
     localStorage.setItem("accessToken", token);
   },
 
-  clear: (): void => {
+  clear: () => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
   },
 };
 
 let isRefreshing = false;
-let refreshQueue: Array<(token: string) => void> = [];
+let queue: Array<(token: string) => void> = [];
 
 function resolveQueue(token: string) {
-  refreshQueue.forEach((resolve) => resolve(token));
-  refreshQueue = [];
+  queue.forEach((cb) => cb(token));
+  queue = [];
 }
 
 async function refreshAccessToken(): Promise<string> {
   const refreshToken = TokenStorage.getRefresh();
-  if (!refreshToken) throw new Error("No refresh token");
+
+  if (!refreshToken) {
+    throw new Error("No refresh token");
+  }
 
   const res = await fetch(`${BASE_URL}/auth/refresh`, {
     method: "POST",
@@ -63,10 +85,11 @@ async function refreshAccessToken(): Promise<string> {
 
   if (!res.ok) {
     TokenStorage.clear();
-    throw new Error("Session expired. Please log in again.");
+    throw new Error("Session expired");
   }
 
   const data: { accessToken: string } = await res.json();
+
   TokenStorage.saveAccess(data.accessToken);
   return data.accessToken;
 }
@@ -76,28 +99,33 @@ async function request<T>(
   options: RequestInit = {},
   isRetry = false
 ): Promise<T> {
-  const accessToken = TokenStorage.getAccess();
+  const token = TokenStorage.getAccess();
 
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
     ...(options.headers as Record<string, string>),
   };
 
-  if (accessToken) {
-    headers["Authorization"] = `Bearer ${accessToken}`;
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
   }
 
-  const res = await fetch(`${BASE_URL}${path}`, { ...options, headers });
+  const res = await fetch(`${BASE_URL}${path}`, {
+    ...options,
+    headers,
+  });
 
   if (res.status === 401 && !isRetry) {
     if (isRefreshing) {
       const newToken = await new Promise<string>((resolve) => {
-        refreshQueue.push(resolve);
+        queue.push(resolve);
       });
+
       return request<T>(path, options, true);
     }
 
     isRefreshing = true;
+
     try {
       const newToken = await refreshAccessToken();
       resolveQueue(newToken);
@@ -108,19 +136,16 @@ async function request<T>(
   }
 
   if (!res.ok) {
-    let message = `HTTP ${res.status}`;
-    try {
-      const err = await res.json();
-      message = err.error ?? message;
-    } catch {}
-    throw new Error(message);
+    const err = await res.json().catch(() => null);
+    throw new Error(err?.error || `HTTP ${res.status}`);
   }
 
   const text = await res.text();
   return text ? JSON.parse(text) : ({} as T);
 }
+
 export const authApi = {
-  register: (body: RegisterBody): Promise<User> =>
+  register: (body: RegisterBody) =>
     request<User>("/auth/register", {
       method: "POST",
       body: JSON.stringify(body),
@@ -131,48 +156,66 @@ export const authApi = {
       method: "POST",
       body: JSON.stringify(body),
     });
+
     TokenStorage.save(tokens);
     return tokens;
   },
 
-  logout: async (): Promise<void> => {
+  logout: async () => {
     const refreshToken = TokenStorage.getRefresh();
+
     if (refreshToken) {
-      await request<void>("/auth/logout", {
+      await request("/auth/logout", {
         method: "POST",
         body: JSON.stringify({ refreshToken }),
-      }).catch(() => {
- 
-      });
+      }).catch(() => {});
     }
+
     TokenStorage.clear();
   },
 
-  isLoggedIn: (): boolean => !!TokenStorage.getAccess(),
+  me: (): Promise<User> => request<User>("/auth/me"),
+
+  isLoggedIn: () => !!TokenStorage.getAccess(),
 };
 
 export const usersApi = {
-  //Get all users. Requires auth.
-
   getAll: (): Promise<User[]> => request<User[]>("/users"),
 
-  //Get a single user by ID.
-  
-  getById: (id: number): Promise<User> => request<User>(`/users/${id}`),
-  
-  //Get a single user by name.
+  getById: (id: number): Promise<User> =>
+    request<User>(`/users/${id}`),
 
   getByName: (name: string): Promise<User> =>
     request<User>(`/users/by-name/${encodeURIComponent(name)}`),
-
-  //Delete a user by ID.
 
   delete: (id: number): Promise<void> =>
     request<void>(`/users/${id}`, { method: "DELETE" }),
 };
 
+export const postsApi = {
+  getAll: (): Promise<Post[]> => request<Post[]>("/posts"),
+
+  getById: (id: number): Promise<Post> =>
+    request<Post>(`/posts/${id}`),
+
+  create: (data: {
+    title?: string;
+    content?: string;
+    imageUrl?: string;
+  }): Promise<Post> =>
+    request<Post>("/posts", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+
+  delete: (id: number): Promise<void> =>
+    request<void>(`/posts/${id}`, {
+      method: "DELETE",
+    }),
+};
 
 export const api = {
   auth: authApi,
   users: usersApi,
+  posts: postsApi,
 };
