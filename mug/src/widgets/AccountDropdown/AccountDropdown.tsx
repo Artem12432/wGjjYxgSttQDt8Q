@@ -31,14 +31,14 @@ export const AccountDropdown = () => {
       <button className={styles.NavAccBTN} onClick={() => setIsOpen(!isOpen)}>Account</button>
         {isOpen && (
             <div className={styles.AccountDropdown}>
-                <Link className={styles.AccountDropdownItem} to="/profile" onClick={handleLogout}>
+                <Link className={styles.AccountDropdownItem} to="/ProfilePage">
                     Profile
                 </Link>
-                <Link className={styles.AccountDropdownItem} to="/settings" onClick={handleLogout}>
+                <Link className={styles.AccountDropdownItem} to="/SettingsPage">
                     Settings
                 </Link>
-                <Link className={styles.AccountDropdownItem} to="/title" onClick={handleLogout}>
-                    Title
+                <Link className={styles.AccountDropdownItem} to="/PinsPage">
+                    Pins
                 </Link>
                 <button className={styles.AccountDropdownItem} onClick={handleLogout}>
                     Logout
