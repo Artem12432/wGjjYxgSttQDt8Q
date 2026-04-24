@@ -68,8 +68,8 @@ export class AuthService {
   }
 
   async me(id: number) {
-    const user = await prisma.user.findUnique({ where: { id } });
+    const user = await prisma.user.findUnique({ where: { id }, include: {posts: true} });
     if (!user) throw new Error("User not found");
-    return { id: user.id, login: user.login, email: user.email, name: user.name };
+    return { id: user.id, login: user.login, email: user.email, name: user.name, posts: user.posts };
   }
 }
