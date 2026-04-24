@@ -8,18 +8,18 @@ export async function authMiddleware(
 ) {
   const auth = req.headers.authorization;
 
-  if (!auth) {
+  if (!auth?.startsWith("Bearer ")) {
     return reply.status(401).send({ error: "No token" });
-  }
-
-  if (!auth.startsWith("Bearer ")) {
-    return reply.status(401).send({ error: "Invalid token format" });
   }
 
   const token = auth.split(" ")[1];
 
   try {
-    const payload = jwt.verify(token, env.JWT_SECRET) as { id: number; login: string };
+    const payload = jwt.verify(token, env.JWT_SECRET) as {
+      id: number;
+      login: string;
+    };
+
     req.user = payload;
   } catch {
     return reply.status(401).send({ error: "Invalid token" });
