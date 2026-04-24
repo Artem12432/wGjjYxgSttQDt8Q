@@ -21,5 +21,43 @@ model User {
   email         String         @unique
   password      String
   name          String
+
+  posts         Post[]
   refreshTokens RefreshToken[]
+
+  createdAt     DateTime       @default(now())
+}
+
+model Post {
+  id        Int      @id @default(autoincrement())
+
+  title     String?
+  content   String?
+
+  imageUrl  String?
+
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  tags      PostTag[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Tag {
+  id    Int       @id @default(autoincrement())
+  name  String    @unique
+
+  posts PostTag[]
+}
+
+model PostTag {
+  postId Int
+  tagId  Int
+
+  post   Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  tag    Tag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([postId, tagId])
 }
