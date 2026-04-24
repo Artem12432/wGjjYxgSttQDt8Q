@@ -5,6 +5,7 @@ import { NavBar } from "../../widgets/navbar/NavBar";
 import { ProfilePage } from "../../pages/ProfilePage/ProfilePage";
 import { SettingsPage } from "../../pages/SettingsPage/SettingsPage";
 import { PinsPage } from "../../pages/PinsPage/PinsPage";
+import { TestPage } from "../../pages/TestPage/TestPage";
 
 export const AppRouter = () => (
     <BrowserRouter>
@@ -15,6 +16,7 @@ export const AppRouter = () => (
             <Route path="/ProfilePage" element={<ProfilePage/>}/>
             <Route path="/SettingsPage" element={<SettingsPage/>}/>
             <Route path="/PinsPage" element={<PinsPage/>}/>
+            <Route path="/test" element={<TestPage/>}/>
         </Routes>
     </BrowserRouter>
 );

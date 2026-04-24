@@ -40,6 +40,9 @@ export const AccountDropdown = () => {
                 <Link className={styles.AccountDropdownItem} to="/PinsPage">
                     Pins
                 </Link>
+                <Link className={styles.AccountDropdownItem} to="/test" >
+                    Test
+                </Link>
                 <button className={styles.AccountDropdownItem} onClick={handleLogout}>
                     Logout
                 </button>

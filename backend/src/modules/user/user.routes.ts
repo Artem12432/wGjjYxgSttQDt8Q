@@ -10,12 +10,12 @@ export async function userRoutes(app: FastifyInstance) {
     { preHandler: [authMiddleware] },
     controller.getAll.bind(controller)
   );
-
   app.get("/users/by-name/:name", controller.getByName.bind(controller));
-  
   app.get("/users/:id", controller.getById.bind(controller));
-
   app.post("/users", controller.create.bind(controller));
-
-  app.delete("/users/:id", controller.delete.bind(controller));
+  app.delete(
+    "/users/:id",
+    { preHandler: [authMiddleware] },
+    controller.delete.bind(controller)
+  );
 }
