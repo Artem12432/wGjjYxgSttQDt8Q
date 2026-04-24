@@ -26,4 +26,5 @@
     margin-left: calc(50% - 37.8px);
     font-size: 30px;
     color: var(--TextColor);
+    text-decoration: none;
 }

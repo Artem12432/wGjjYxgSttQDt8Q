@@ -1,6 +1,6 @@
 .Page {
   column-count: 6;
-  column-gap: 10px;
+  column-gap: 1%;
   padding: 10px;
 }
 
@@ -8,7 +8,7 @@
 .Photo {
   width: 100%;
   margin-bottom: 10px;
-  border-radius: 20px;
+  border-radius: 1.5vw;
   cursor: pointer;
   break-inside: avoid;
 }
@@ -26,12 +26,6 @@
   align-items: center;
 }
 
-.ModalContent img {
-  max-width: 90vw;
-  max-height: 80vh;
-  border-radius: 12px;
-}
-
 .DownloadBtn {
   display: block;
   margin-top: 10px;
@@ -41,4 +35,11 @@
   border-radius: 10px;
   text-decoration: none;
   color: black;
+}
+
+.IMG {
+  min-height: 60vh;
+  max-width: 90vw;
+  max-height: 80vh;
+  border-radius: 12px;  
 }

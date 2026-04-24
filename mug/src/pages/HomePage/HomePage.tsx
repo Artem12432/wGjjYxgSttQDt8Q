@@ -60,7 +60,7 @@ export const HomePage = () => {
       {selectedImg && (
         <div className={styles.Modal} onClick={() => setSelectedImg(null)}>
           <div onClick={(e) => e.stopPropagation()}>
-            <img src={selectedImg} />
+            <img src={selectedImg} className={styles.IMG} />
 
             <a href={selectedImg} download className={styles.DownloadBtn}>
               Скачать

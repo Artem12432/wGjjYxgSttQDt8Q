@@ -1,12 +1,18 @@
 *,*::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root{
-  --BaseColor:  #1b1819;
-  --SecondBaseColor: #2d2327;
-  --TextColor: #A0355E;
-  --SecondTextColor: #F5005D;
+  --BaseColor:  #181a1b;
+  --SecondBaseColor: #407180;
+  --ThirtBaseColor: #394E55;
+  --TextColor: #3990AA;
+  --SecondTextColor: #00C2FF;
 }
 
 body{
-  background-color: var(--SecondBaseColor);
+  background-color: var(--ThirtBaseColor);
+}
+
+::-webkit-scrollbar {
+  width: 0px;
+  background: rgba(255, 255, 255, 0.0);
 }
